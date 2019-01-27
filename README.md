@@ -23,7 +23,7 @@ Example content of translations/web/lt.json:
 ```go
 import (
     "github.com/v3nom/vertimas"
-	"golang.org/x/text/language"
+    "golang.org/x/text/language"
 )
 
 // Creates instance, preloads translations from "translations/web/" folder and sets initial language to first language in the array (English)

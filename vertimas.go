@@ -10,25 +10,23 @@ import (
 
 // Instance vertimas instance
 type Instance struct {
-	languageMap        map[string]map[string]string
-	languageMatcher    language.Matcher
-	supportedLanguages []language.Tag
+	languageMap        *map[string]map[string]string
+	languageMatcher    *language.Matcher
+	supportedLanguages *[]language.Tag
 	currentLanguage    language.Tag
 }
 
 // SetLanguage sets current language
-func (v *Instance) SetLanguage(lang string) language.Tag {
-	_, i := language.MatchStrings(v.languageMatcher, lang)
-	v.currentLanguage = v.supportedLanguages[i]
-	return v.currentLanguage
+func (v *Instance) SetLanguage(lang string) *Instance {
+	_, i := language.MatchStrings(*v.languageMatcher, lang)
+	return v.updateLanguage((*v.supportedLanguages)[i])
 }
 
 // SetLanguageFromRequest sets current language from http.Request
-func (v *Instance) SetLanguageFromRequest(r *http.Request) language.Tag {
+func (v *Instance) SetLanguageFromRequest(r *http.Request) *Instance {
 	acceptedLanguages := r.Header.Get("Accept-Language")
-	_, i := language.MatchStrings(v.languageMatcher, acceptedLanguages, "en")
-	v.currentLanguage = v.supportedLanguages[i]
-	return v.currentLanguage
+	_, i := language.MatchStrings(*v.languageMatcher, acceptedLanguages)
+	return v.updateLanguage((*v.supportedLanguages)[i])
 }
 
 // GetLanguage gets current language
@@ -38,20 +36,32 @@ func (v Instance) GetLanguage() language.Tag {
 
 // GetTranslation gets translation from current language
 func (v Instance) GetTranslation(name string) string {
-	return v.languageMap[v.currentLanguage.String()][name]
+	return (*v.languageMap)[v.currentLanguage.String()][name]
 }
 
 // GetTranslations gets translation map for current language
 func (v Instance) GetTranslations() map[string]string {
-	return v.languageMap[v.currentLanguage.String()]
+	return (*v.languageMap)[v.currentLanguage.String()]
+}
+
+func (v Instance) updateLanguage(lang language.Tag) *Instance {
+	return &Instance{
+		languageMap:        v.languageMap,
+		supportedLanguages: v.supportedLanguages,
+		languageMatcher:    v.languageMatcher,
+		currentLanguage:    lang,
+	}
 }
 
 // CreateInstance creates vertimas instance and loads .json translation files from given path
 func CreateInstance(path string, supported []language.Tag) (*Instance, error) {
+	languageMap := map[string]map[string]string{}
+	matcher := language.NewMatcher(supported)
+
 	instance := &Instance{
-		languageMap:        make(map[string]map[string]string),
-		supportedLanguages: supported,
-		languageMatcher:    language.NewMatcher(supported),
+		languageMap:        &languageMap,
+		supportedLanguages: &supported,
+		languageMatcher:    &matcher,
 		currentLanguage:    supported[0],
 	}
 	for _, v := range supported {
@@ -66,7 +76,7 @@ func CreateInstance(path string, supported []language.Tag) (*Instance, error) {
 			return nil, err
 		}
 
-		instance.languageMap[v.String()] = data
+		languageMap[v.String()] = data
 	}
 	return instance, nil
 }
