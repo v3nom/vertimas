@@ -1,4 +1,4 @@
-# Vertimas
+# Vertimas [![Build Status](https://travis-ci.com/v3nom/vertimas.svg?branch=master)](https://travis-ci.com/v3nom/vertimas)
 A simple Golang translation handling library. "Vertimas" is a Lithuanian word meaning translation.
 
 ## Usage
