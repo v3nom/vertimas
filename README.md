@@ -38,11 +38,11 @@ instance.GetTranslation("greating") // returns "Hello"
 // Get all translations for current language
 instance.GetTranslations() // returns map of translations for current language
 
-// Tries to find given language in supported language list, sets it as current language and returns best match
-instance.SetLanguage("lt") // returns matched language
+// Tries to find given language in supported language list and creates new instance without reloading translation files
+lithuanianVertimas := instance.SetLanguage("lt") // returns new instance where current language is updated
 
-// Tries to find language from HTTP Accept-Language header in supported language list, sets it as current language and returns best match
-instance.SetLanguageFromRequest(r) // returns matched language
+// Tries to find language from HTTP Accept-Language header in supported language list and creates new instance without reloading translation files
+newInstance := instance.SetLanguageFromRequest(r) // returns new instance with current language set from HTTP request
 
 // Gets current language
 instance.GetLanguage() // returns current language
