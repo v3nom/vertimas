@@ -8,7 +8,8 @@ Example content of translations/web/en.json:
 ```json
 {
     "greating": "Hello",
-    "farewell": "Bye"
+    "farewell": "Bye",
+    "greeting_name": "Hello, {name}"
 }
 ```
 
@@ -16,7 +17,8 @@ Example content of translations/web/lt.json:
 ```json
 {
     "greating": "Labas",
-    "farewell": "Viso gero"
+    "farewell": "Viso gero",
+    "greeting_name": "Labas, {name}"
 }
 ```
 
@@ -34,6 +36,11 @@ instance, err := vertimas.CreateInstance("translations/web/", []language.Tag{
 
 // Get translation for key
 instance.GetTranslation("greating") // returns "Hello"
+
+// Get translation by key and replacing placeholders with dynamic values
+instance.GetParametrizedTranslation("greeting_name", map[string]string{
+	"name": "Tomas",
+})
 
 // Get all translations for current language
 instance.GetTranslations() // returns map of translations for current language

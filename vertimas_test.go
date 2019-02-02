@@ -116,6 +116,18 @@ func TestGetTranslations(t *testing.T) {
 	}
 }
 
+func TestGetParametrizedTranslation(t *testing.T) {
+	instance := createTestInstance()
+
+	greeting := instance.GetParametrizedTranslation("greeting_name", map[string]string{
+		"name": "Tomas",
+	})
+
+	if greeting != "Hello, Tomas" {
+		t.Error("Expected parametrised translation")
+	}
+}
+
 func createTestInstance() *Instance {
 	return CreateInstanceWithPanic("testdata/", []language.Tag{
 		language.English,

@@ -1,4 +1,5 @@
 {
     "greeting": "Labas",
-    "farewell": "Viso gero"
+    "farewell": "Viso gero",
+    "greeting_name": "Labas, {name}"
 }

@@ -1,4 +1,5 @@
 {
     "greeting": "Hello",
-    "farewell": "Bye"
+    "farewell": "Bye",
+    "greeting_name": "Hello, {name}"
 }

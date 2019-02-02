@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"regexp"
+	"strings"
 
 	"golang.org/x/text/language"
 )
@@ -37,6 +39,18 @@ func (v Instance) GetLanguage() language.Tag {
 // GetTranslation gets translation from current language
 func (v Instance) GetTranslation(name string) string {
 	return (*v.languageMap)[v.currentLanguage.String()][name]
+}
+
+var parametrizedRegex = regexp.MustCompile(`\{([a-z0-9]*)\}`)
+
+// GetParametrizedTranslation gets translation from current language with {token} replaced from values map
+func (v Instance) GetParametrizedTranslation(name string, values map[string]string) string {
+	translation := v.GetTranslation(name)
+	tokens := parametrizedRegex.FindAllStringSubmatch(translation, -1)
+	for _, v := range tokens {
+		translation = strings.Replace(translation, v[0], values[v[1]], 1)
+	}
+	return translation
 }
 
 // GetTranslations gets translation map for current language
